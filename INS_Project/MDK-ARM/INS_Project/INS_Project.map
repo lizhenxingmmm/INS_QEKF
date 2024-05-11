@@ -795,10 +795,17 @@ Section Cross References
     kalmanfilter.o(i.KalmanFilter_P_Update) refers to arm_mat_mult_f32.o(.text.arm_mat_mult_f32) for arm_mat_mult_f32
     kalmanfilter.o(i.KalmanFilter_P_Update) refers to arm_mat_sub_f32.o(.text.arm_mat_sub_f32) for arm_mat_sub_f32
     kalmanfilter.o(i.KalmanFilter_Pminus_Updata) refers to arm_mat_mult_f32.o(.text.arm_mat_mult_f32) for arm_mat_mult_f32
+    kalmanfilter.o(i.KalmanFilter_Pminus_Updata) refers to arm_mat_trans_f32.o(.text.arm_mat_trans_f32) for arm_mat_trans_f32
     kalmanfilter.o(i.KalmanFilter_Pminus_Updata) refers to arm_mat_add_f32.o(.text.arm_mat_add_f32) for arm_mat_add_f32
+    kalmanfilter.o(i.KalmanFilter_SetK) refers to arm_mat_trans_f32.o(.text.arm_mat_trans_f32) for arm_mat_trans_f32
     kalmanfilter.o(i.KalmanFilter_SetK) refers to arm_mat_mult_f32.o(.text.arm_mat_mult_f32) for arm_mat_mult_f32
     kalmanfilter.o(i.KalmanFilter_SetK) refers to arm_mat_add_f32.o(.text.arm_mat_add_f32) for arm_mat_add_f32
     kalmanfilter.o(i.KalmanFilter_SetK) refers to arm_mat_inverse_f32.o(.text.arm_mat_inverse_f32) for arm_mat_inverse_f32
+    kalmanfilter.o(i.KalmanFilter_Update) refers to kalmanfilter.o(i.KalmanFilter_xhatminus_Updata) for KalmanFilter_xhatminus_Updata
+    kalmanfilter.o(i.KalmanFilter_Update) refers to kalmanfilter.o(i.KalmanFilter_Pminus_Updata) for KalmanFilter_Pminus_Updata
+    kalmanfilter.o(i.KalmanFilter_Update) refers to kalmanfilter.o(i.KalmanFilter_SetK) for KalmanFilter_SetK
+    kalmanfilter.o(i.KalmanFilter_Update) refers to kalmanfilter.o(i.KalmanFilter_xhat_Update) for KalmanFilter_xhat_Update
+    kalmanfilter.o(i.KalmanFilter_Update) refers to kalmanfilter.o(i.KalmanFilter_P_Update) for KalmanFilter_P_Update
     kalmanfilter.o(i.KalmanFilter_xhat_Update) refers to arm_mat_mult_f32.o(.text.arm_mat_mult_f32) for arm_mat_mult_f32
     kalmanfilter.o(i.KalmanFilter_xhat_Update) refers to arm_mat_sub_f32.o(.text.arm_mat_sub_f32) for arm_mat_sub_f32
     kalmanfilter.o(i.KalmanFilter_xhat_Update) refers to arm_mat_add_f32.o(.text.arm_mat_add_f32) for arm_mat_add_f32
@@ -821,6 +828,7 @@ Section Cross References
     arm_mat_mult_f32.o(.ARM.exidx.text.arm_mat_mult_f32) refers to arm_mat_mult_f32.o(.text.arm_mat_mult_f32) for [Anonymous Symbol]
     arm_mat_sub_f32.o(.text.arm_mat_sub_f32) refers to fadd.o(.text) for __aeabi_fsub
     arm_mat_sub_f32.o(.ARM.exidx.text.arm_mat_sub_f32) refers to arm_mat_sub_f32.o(.text.arm_mat_sub_f32) for [Anonymous Symbol]
+    arm_mat_trans_f32.o(.ARM.exidx.text.arm_mat_trans_f32) refers to arm_mat_trans_f32.o(.text.arm_mat_trans_f32) for [Anonymous Symbol]
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry10a.o(.ARM.Collect$$$$0000000F) for __rt_final_cpp
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry11a.o(.ARM.Collect$$$$00000011) for __rt_final_exit
     entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry12b.o(.ARM.Collect$$$$0000000E) for __rt_lib_shutdown_fini
@@ -1420,10 +1428,11 @@ Removing Unused input sections from the image.
     Removing kalmanfilter.o(.rev16_text), (4 bytes).
     Removing kalmanfilter.o(.revsh_text), (4 bytes).
     Removing kalmanfilter.o(.rrx_text), (6 bytes).
-    Removing kalmanfilter.o(i.KalmanFilter_Init), (630 bytes).
+    Removing kalmanfilter.o(i.KalmanFilter_Init), (660 bytes).
     Removing kalmanfilter.o(i.KalmanFilter_P_Update), (54 bytes).
-    Removing kalmanfilter.o(i.KalmanFilter_Pminus_Updata), (54 bytes).
-    Removing kalmanfilter.o(i.KalmanFilter_SetK), (100 bytes).
+    Removing kalmanfilter.o(i.KalmanFilter_Pminus_Updata), (68 bytes).
+    Removing kalmanfilter.o(i.KalmanFilter_SetK), (110 bytes).
+    Removing kalmanfilter.o(i.KalmanFilter_Update), (100 bytes).
     Removing kalmanfilter.o(i.KalmanFilter_xhat_Update), (72 bytes).
     Removing kalmanfilter.o(i.KalmanFilter_xhatminus_Updata), (74 bytes).
     Removing arm_mat_add_f32.o(.text), (0 bytes).
@@ -1441,6 +1450,9 @@ Removing Unused input sections from the image.
     Removing arm_mat_sub_f32.o(.text), (0 bytes).
     Removing arm_mat_sub_f32.o(.text.arm_mat_sub_f32), (148 bytes).
     Removing arm_mat_sub_f32.o(.ARM.exidx.text.arm_mat_sub_f32), (8 bytes).
+    Removing arm_mat_trans_f32.o(.text), (0 bytes).
+    Removing arm_mat_trans_f32.o(.text.arm_mat_trans_f32), (178 bytes).
+    Removing arm_mat_trans_f32.o(.ARM.exidx.text.arm_mat_trans_f32), (8 bytes).
     Removing fadd.o(.text), (176 bytes).
     Removing fmul.o(.text), (100 bytes).
     Removing fdiv.o(.text), (124 bytes).
@@ -1450,7 +1462,7 @@ Removing Unused input sections from the image.
     Removing fcmpeq.o(.text), (28 bytes).
     Removing fepilogue.o(.text), (110 bytes).
 
-563 unused section(s) (total 41796 bytes) removed from the image.
+567 unused section(s) (total 42136 bytes) removed from the image.
 
 ==============================================================================
 
@@ -1493,38 +1505,38 @@ Image Symbol Table
     ../Middlewares/Third_Party/FreeRTOS/Source/tasks.c 0x00000000   Number         0  tasks.o ABSOLUTE
     ../Middlewares/Third_Party/FreeRTOS/Source/timers.c 0x00000000   Number         0  timers.o ABSOLUTE
     ../clib/microlib/division.c              0x00000000   Number         0  uldiv.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry12b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry12a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry12b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llushr.o ABSOLUTE
     ../clib/microlib/longlong.c              0x00000000   Number         0  llshl.o ABSOLUTE
-    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloca.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocr.o ABSOLUTE
     ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  malloc.o ABSOLUTE
+    ../clib/microlib/malloc/malloc.c         0x00000000   Number         0  mallocra.o ABSOLUTE
     ../clib/microlib/malloc/mvars.c          0x00000000   Number         0  mvars.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
-    ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
     ../clib/microlib/string/memset.c         0x00000000   Number         0  memset.o ABSOLUTE
+    ../clib/microlib/string/memset.c         0x00000000   Number         0  memseta.o ABSOLUTE
     ../clib/microlib/stubs.s                 0x00000000   Number         0  iusefp.o ABSOLUTE
     ../fplib/microlib/fpadd.c                0x00000000   Number         0  fadd.o ABSOLUTE
-    ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmple.o ABSOLUTE
-    ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmplt.o ABSOLUTE
-    ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmpgt.o ABSOLUTE
     ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmpeq.o ABSOLUTE
+    ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmpgt.o ABSOLUTE
+    ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmplt.o ABSOLUTE
+    ../fplib/microlib/fpcmp.c                0x00000000   Number         0  fcmple.o ABSOLUTE
     ../fplib/microlib/fpdiv.c                0x00000000   Number         0  fdiv.o ABSOLUTE
     ../fplib/microlib/fpepilogue.c           0x00000000   Number         0  fepilogue.o ABSOLUTE
     ../fplib/microlib/fpmul.c                0x00000000   Number         0  fmul.o ABSOLUTE
@@ -1559,6 +1571,7 @@ Image Symbol Table
     arm_mat_inverse_f32.c                    0x00000000   Number         0  arm_mat_inverse_f32.o ABSOLUTE
     arm_mat_mult_f32.c                       0x00000000   Number         0  arm_mat_mult_f32.o ABSOLUTE
     arm_mat_sub_f32.c                        0x00000000   Number         0  arm_mat_sub_f32.o ABSOLUTE
+    arm_mat_trans_f32.c                      0x00000000   Number         0  arm_mat_trans_f32.o ABSOLUTE
     dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
     handlers.s                               0x00000000   Number         0  handlers.o ABSOLUTE
     init.s                                   0x00000000   Number         0  init.o ABSOLUTE
@@ -1920,25 +1933,25 @@ Memory Map of the image
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08000000   0x08000000   0x00000198   Data   RO            3    RESET               startup_stm32f411xe.o
-    0x08000198   0x08000198   0x00000000   Code   RO         4164  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x08000198   0x08000198   0x00000004   Code   RO         4219    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x0800019c   0x0800019c   0x00000004   Code   RO         4222    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x080001a0   0x080001a0   0x00000000   Code   RO         4224    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x080001a0   0x080001a0   0x00000000   Code   RO         4226    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x080001a0   0x080001a0   0x00000008   Code   RO         4227    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x080001a8   0x080001a8   0x00000004   Code   RO         4234    .ARM.Collect$$$$0000000E  mc_w.l(entry12b.o)
-    0x080001ac   0x080001ac   0x00000000   Code   RO         4229    .ARM.Collect$$$$0000000F  mc_w.l(entry10a.o)
-    0x080001ac   0x080001ac   0x00000000   Code   RO         4231    .ARM.Collect$$$$00000011  mc_w.l(entry11a.o)
-    0x080001ac   0x080001ac   0x00000004   Code   RO         4220    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x08000198   0x08000198   0x00000000   Code   RO         4180  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x08000198   0x08000198   0x00000004   Code   RO         4235    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0800019c   0x0800019c   0x00000004   Code   RO         4238    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x080001a0   0x080001a0   0x00000000   Code   RO         4240    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x080001a0   0x080001a0   0x00000000   Code   RO         4242    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x080001a0   0x080001a0   0x00000008   Code   RO         4243    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x080001a8   0x080001a8   0x00000004   Code   RO         4250    .ARM.Collect$$$$0000000E  mc_w.l(entry12b.o)
+    0x080001ac   0x080001ac   0x00000000   Code   RO         4245    .ARM.Collect$$$$0000000F  mc_w.l(entry10a.o)
+    0x080001ac   0x080001ac   0x00000000   Code   RO         4247    .ARM.Collect$$$$00000011  mc_w.l(entry11a.o)
+    0x080001ac   0x080001ac   0x00000004   Code   RO         4236    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x080001b0   0x080001b0   0x000000be   Code   RO         3912    .emb_text           port.o
     0x0800026e   0x0800026e   0x00000002   PAD
     0x08000270   0x08000270   0x00000024   Code   RO            4    .text               startup_stm32f411xe.o
-    0x08000294   0x08000294   0x00000062   Code   RO         4167    .text               mc_w.l(uldiv.o)
-    0x080002f6   0x080002f6   0x00000024   Code   RO         4169    .text               mc_w.l(memcpya.o)
-    0x0800031a   0x0800031a   0x00000024   Code   RO         4173    .text               mc_w.l(memseta.o)
-    0x0800033e   0x0800033e   0x0000001e   Code   RO         4235    .text               mc_w.l(llshl.o)
-    0x0800035c   0x0800035c   0x00000020   Code   RO         4237    .text               mc_w.l(llushr.o)
-    0x0800037c   0x0800037c   0x00000024   Code   RO         4244    .text               mc_w.l(init.o)
+    0x08000294   0x08000294   0x00000062   Code   RO         4183    .text               mc_w.l(uldiv.o)
+    0x080002f6   0x080002f6   0x00000024   Code   RO         4185    .text               mc_w.l(memcpya.o)
+    0x0800031a   0x0800031a   0x00000024   Code   RO         4189    .text               mc_w.l(memseta.o)
+    0x0800033e   0x0800033e   0x0000001e   Code   RO         4251    .text               mc_w.l(llshl.o)
+    0x0800035c   0x0800035c   0x00000020   Code   RO         4253    .text               mc_w.l(llushr.o)
+    0x0800037c   0x0800037c   0x00000024   Code   RO         4260    .text               mc_w.l(init.o)
     0x080003a0   0x080003a0   0x00000002   Code   RO          341    i.BusFault_Handler  stm32f4xx_it.o
     0x080003a2   0x080003a2   0x00000002   Code   RO          342    i.DebugMon_Handler  stm32f4xx_it.o
     0x080003a4   0x080003a4   0x0000000c   Code   RO         1439    i.HAL_GetTick       stm32f4xx_hal.o
@@ -1980,9 +1993,9 @@ Memory Map of the image
     0x08000df0   0x08000df0   0x000000a4   Code   RO         1779    i.TIM_Base_SetConfig  stm32f4xx_hal_tim.o
     0x08000e94   0x08000e94   0x00000002   Code   RO          347    i.UsageFault_Handler  stm32f4xx_it.o
     0x08000e96   0x08000e96   0x00000020   Code   RO         1304    i.__NVIC_SetPriority  stm32f4xx_hal_cortex.o
-    0x08000eb6   0x08000eb6   0x0000000e   Code   RO         4248    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x08000ec4   0x08000ec4   0x00000002   Code   RO         4249    i.__scatterload_null  mc_w.l(handlers.o)
-    0x08000ec6   0x08000ec6   0x0000000e   Code   RO         4250    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x08000eb6   0x08000eb6   0x0000000e   Code   RO         4264    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x08000ec4   0x08000ec4   0x00000002   Code   RO         4265    i.__scatterload_null  mc_w.l(handlers.o)
+    0x08000ec6   0x08000ec6   0x0000000e   Code   RO         4266    i.__scatterload_zeroinit  mc_w.l(handlers.o)
     0x08000ed4   0x08000ed4   0x00000016   Code   RO           16    i.main              main.o
     0x08000eea   0x08000eea   0x0000000c   Code   RO         3478    i.makeFreeRtosPriority  cmsis_os.o
     0x08000ef6   0x08000ef6   0x0000000e   Code   RO         3480    i.osDelay           cmsis_os.o
@@ -2024,7 +2037,7 @@ Memory Map of the image
     0x080019bc   0x080019bc   0x00000010   Data   RO         2659    .constdata          system_stm32f4xx.o
     0x080019cc   0x080019cc   0x00000008   Data   RO         2660    .constdata          system_stm32f4xx.o
     0x080019d4   0x080019d4   0x0000000c   Data   RO          296    .conststring        freertos.o
-    0x080019e0   0x080019e0   0x00000020   Data   RO         4246    Region$$Table       anon$$obj.o
+    0x080019e0   0x080019e0   0x00000020   Data   RO         4262    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08001a00, Size: 0x00004408, Max: 0x00020000, ABSOLUTE)

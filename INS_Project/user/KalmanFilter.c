@@ -18,6 +18,10 @@ void KalmanFilter_Init(KalmanFilter* kf,uint8_t x_size,uint8_t u_size,uint8_t z_
     kf->x_size=x_size;
     kf->u_size=u_size;
     kf->z_size=z_size;
+    //分配输入数据接口空间
+    kf->InputVector_u=(float*)user_malloc(u_size);
+    kf->Filtered_StateVector_x=(float*)user_malloc(x_size);
+    kf->MeasuredVector_z=(float*)user_malloc(z_size);
     //分配矩阵数据空间
     kf->A_data=(float*)user_malloc(x_size*x_size);
     kf->AT_data=(float*)user_malloc(x_size*x_size);
@@ -128,4 +132,46 @@ void KalmanFilter_P_Update(KalmanFilter *kf)
     Matrix_Multiply(&(kf->K),&(kf->H),&(kf->temp_x_x_mat));
     Matrix_Subtract(&(kf->I_x_x),&(kf->temp_x_x_mat),&(kf->temp_x_x_mat2));
     Matrix_Multiply(&(kf->temp_x_x_mat2),&(kf->P_minus),&(kf->P));
+}
+/**
+ * @brief kalman filter 迭代得到最优估计数据
+*/
+float *KalmanFilter_Update(KalmanFilter *kf)
+{
+    if(kf->DataInput!=NULL)
+    {
+        kf->DataInput(kf);
+    }
+    //得到先验估计值
+    KalmanFilter_xhatminus_Updata(kf);
+    if(kf->user_function_1!=NULL)
+    {
+        kf->user_function_1(kf);
+    }
+    //得到先验估计协方差矩阵
+    KalmanFilter_Pminus_Updata(kf);
+    if(kf->user_function_2!=NULL)
+    {
+        kf->user_function_2(kf);
+    }
+    //得到卡尔曼增益
+    KalmanFilter_SetK(kf);
+    if(kf->user_function_3!=NULL)
+    {
+        kf->user_function_3(kf);
+    }
+    //得到后验(最终)估计值
+    KalmanFilter_xhat_Update(kf);
+    if(kf->user_function_4!=NULL)
+    {
+        kf->user_function_4(kf);
+    }
+    //得到估计协方差矩阵
+    KalmanFilter_P_Update(kf);
+    if(kf->user_function_5!=NULL)
+    {
+        kf->user_function_5(kf);
+    }
+    memcpy(kf->Filtered_StateVector_x,kf->x_hat_data,kf->x_size);
+    return kf->Filtered_StateVector_x;
 }

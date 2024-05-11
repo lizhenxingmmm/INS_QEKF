@@ -30,9 +30,11 @@
 
 typedef struct kf_struct
 {
+    //外部传感器数据接口
     float *InputVector_u;
     float *Filtered_StateVector_x;
     float *MeasuredVector_z;
+    //矩阵
     mat x_hat;
     mat x_hat_minus;
     mat A,A_T;//状态转移矩阵A
@@ -74,13 +76,9 @@ typedef struct kf_struct
     uint8_t x_size;
     uint8_t u_size;
     uint8_t z_size;
-    //用于扩展卡尔曼滤波
-    void (*getMatrixA)(struct kf_struct* kf);
-    void (*getMatrixB)(struct kf_struct* kf);
-    void (*getMatrixH)(struct kf_struct* kf);
-    void (*getMatrixQ_afterLinearlization)(struct kf_struct* kf);
-    void (*getMatrixR_afterLinearlization)(struct kf_struct* kf);
-    //user function
+    //数据输入函数，一定要定义！！
+    void (*DataInput)(struct kf_struct* kf);//用于将传感器数据给到卡尔曼滤波器
+    //user function 用于扩展卡尔曼滤波
     void (*user_function_1)(struct kf_struct* kf);
     void (*user_function_2)(struct kf_struct* kf);
     void (*user_function_3)(struct kf_struct* kf);
@@ -89,12 +87,12 @@ typedef struct kf_struct
 }KalmanFilter;
 
 void KalmanFilter_Init(KalmanFilter* kf,uint8_t x_size,uint8_t u_size,uint8_t z_size);
-void KalmanFilter_getMeasurementData(KalmanFilter* kf);
 void KalmanFilter_xhatminus_Updata(KalmanFilter* kf);
 void KalmanFilter_Pminus_Updata(KalmanFilter* kf);
 void KalmanFilter_SetK(KalmanFilter *kf);
 void KalmanFilter_xhat_Update(KalmanFilter *kf);
 void KalmanFilter_P_Update(KalmanFilter *kf);
 float *KalmanFilter_Update(KalmanFilter *kf);
+
 
 #endif
