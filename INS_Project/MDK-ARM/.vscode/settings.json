@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "kalmanfilter.h": "c",
+        "arm_math.h": "c"
+    }
+}

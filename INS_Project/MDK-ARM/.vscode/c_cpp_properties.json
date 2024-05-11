@@ -12,13 +12,16 @@
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Drivers\\CMSIS\\Include",
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\user",
+                "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Drivers\\CMSIS\\DSP\\Include",
+                "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Middlewares\\ST\\ARM\\DSP\\Inc",
                 "D:\\keil\\ARM\\ARMCC\\include",
                 "D:\\keil\\ARM\\ARMCC\\include\\rw",
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\MDK-ARM",
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Core\\Src",
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Drivers\\STM32F4xx_HAL_Driver\\Src",
                 "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Middlewares\\Third_Party\\FreeRTOS\\Source",
-                "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang"
+                "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang",
+                "d:\\multi_function\\desk\\new_start\\INS_QEKF\\INS_Project\\Middlewares\\ST\\ARM\\DSP\\Lib"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

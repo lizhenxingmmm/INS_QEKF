@@ -1,0 +1,17 @@
+ins_project\bayesfunctions.o: D:\keil\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\BayesFunctions\BayesFunctions.c
+ins_project\bayesfunctions.o: D:\keil\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\BayesFunctions\arm_gaussian_naive_bayes_predict_f32.c
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\dsp/bayes_functions.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\arm_math_types.h
+ins_project\bayesfunctions.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+ins_project\bayesfunctions.o: D:\keil\ARM\ARMCC\Bin\..\include\stdint.h
+ins_project\bayesfunctions.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+ins_project\bayesfunctions.o: D:\keil\ARM\ARMCC\Bin\..\include\string.h
+ins_project\bayesfunctions.o: D:\keil\ARM\ARMCC\Bin\..\include\math.h
+ins_project\bayesfunctions.o: D:\keil\ARM\ARMCC\Bin\..\include\float.h
+ins_project\bayesfunctions.o: D:\keil\ARM\ARMCC\Bin\..\include\limits.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\arm_math_memory.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\dsp/none.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\dsp/utils.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\dsp/statistics_functions.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\dsp/basic_math_functions.h
+ins_project\bayesfunctions.o: ..\Drivers\CMSIS\DSP\Include\dsp/fast_math_functions.h
