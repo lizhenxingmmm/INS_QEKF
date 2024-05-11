@@ -45,9 +45,35 @@ typedef struct kf_struct
     mat K;//卡尔曼增益 Kalman Gain
     mat P;//误差协方差矩阵
     mat P_minus;//先验误差协方差矩阵
+    mat I_x_x;//xsize x xsize 阶单位矩阵
     //暂时矩阵
     mat temp_mat_for_xhatminus_Updata,temp_mat_for_xhatminus_Updata2;
     mat temp_mat_for_Pminus_Updata,temp_mat_for_Pminus_Updata2;
+    mat temp_x_z_mat,temp_z_x_mat,temp_z_z_mat,temp_z_z_mat2,temp_z_z_mat3;
+    mat temp_z_1_mat,temp_z_1_mat2,temp_x_1_mat;
+    mat temp_x_x_mat,temp_x_x_mat2;
+    //矩阵数据存储空间指针
+    float *x_hat_data, *x_hat_minus_data;
+    float *u_data;
+    float *z_data;
+    float *P_data, *P_minus_data;
+    float *A_data, *AT_data;
+    float *B_data;
+    float *H_data, *HT_data;
+    float *Q_data;
+    float *R_data;
+    float *K_data;
+    float *I_data;
+    //暂时矩阵的数据空间
+    float *temp_mat_for_xhatminus_Updata_data,*temp_mat_for_xhatminus_Updata_data2;
+    float *temp_mat_for_Pminus_Updata_data,*temp_mat_for_Pminus_Updata_data2;
+    float *temp_x_z_mat_data,*temp_z_x_mat_data,*temp_z_z_mat_data,*temp_z_z_mat2_data,*temp_z_z_mat3_data;
+    float *temp_z_1_mat_data,*temp_z_1_mat2_data,*temp_x_1_mat_data;
+    float *temp_x_x_mat_data,*temp_x_x_mat2_data;
+    //状态空间方程中变量的维度
+    uint8_t x_size;
+    uint8_t u_size;
+    uint8_t z_size;
     //用于扩展卡尔曼滤波
     void (*getMatrixA)(struct kf_struct* kf);
     void (*getMatrixB)(struct kf_struct* kf);
@@ -60,23 +86,6 @@ typedef struct kf_struct
     void (*user_function_3)(struct kf_struct* kf);
     void (*user_function_4)(struct kf_struct* kf);
     void (*user_function_5)(struct kf_struct* kf);
-    //矩阵数据存储空间指针
-    float *x_hat_data, *x_hat_minus_data;
-    float *u_data;
-    float *z_data;
-    float *P_data, *P_minus_data;
-    float *A_data, *AT_data;
-    float *B_data;
-    float *H_data, *HT_data;
-    float *Q_data;
-    float *R_data;
-    float *K_data;
-    float *temp_mat_for_xhatminus_Updata_data,*temp_mat_for_xhatminus_Updata_data2;
-    float *temp_mat_for_Pminus_Updata_data,*temp_mat_for_Pminus_Updata_data2;
-    //状态空间方程中变量的维度
-    uint8_t x_size;
-    uint8_t u_size;
-    uint8_t z_size;
 }KalmanFilter;
 
 void KalmanFilter_Init(KalmanFilter* kf,uint8_t x_size,uint8_t u_size,uint8_t z_size);

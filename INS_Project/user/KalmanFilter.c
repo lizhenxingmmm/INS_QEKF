@@ -29,9 +29,21 @@ void KalmanFilter_Init(KalmanFilter* kf,uint8_t x_size,uint8_t u_size,uint8_t z_
     kf->P_minus_data=(float*)user_malloc(x_size*x_size);
     kf->x_hat_data=(float*)user_malloc(x_size);
     kf->x_hat_minus_data=(float*)user_malloc(x_size);
+    kf->I_data=(float*)user_malloc(x_size*x_size);
     //用于运算的暂时的矩阵数据空间
     kf->temp_mat_for_xhatminus_Updata_data=(float*)user_malloc(x_size);
     kf->temp_mat_for_xhatminus_Updata_data2=(float*)user_malloc(x_size);
+    kf->temp_mat_for_Pminus_Updata_data=(float*)user_malloc(x_size*x_size);
+    kf->temp_mat_for_Pminus_Updata_data2=(float*)user_malloc(x_size*x_size);
+    kf->temp_x_z_mat_data=(float*)user_malloc(x_size*z_size);
+    kf->temp_z_z_mat_data=(float*)user_malloc(z_size*z_size);
+    kf->temp_z_z_mat2_data=(float*)user_malloc(z_size*z_size);
+    kf->temp_z_z_mat3_data=(float*)user_malloc(z_size*z_size);
+    kf->temp_z_x_mat_data=(float*)user_malloc(z_size*x_size);
+    kf->temp_z_1_mat_data=(float*)user_malloc(z_size);
+    kf->temp_z_1_mat2_data=(float*)user_malloc(z_size);
+    kf->temp_x_x_mat_data=(float*)user_malloc(x_size*x_size);
+    kf->temp_x_x_mat2_data=(float*)user_malloc(x_size*x_size);
     //初始化矩阵
     Matrix_Init(&(kf->A),x_size,x_size,kf->A_data);
     Matrix_Init(&(kf->A_T),x_size,x_size,kf->AT_data);
@@ -43,9 +55,21 @@ void KalmanFilter_Init(KalmanFilter* kf,uint8_t x_size,uint8_t u_size,uint8_t z_
     Matrix_Init(&(kf->P_minus),x_size,x_size,kf->P_minus_data);
     Matrix_Init(&(kf->x_hat),x_size,1,kf->x_hat_data);
     Matrix_Init(&(kf->x_hat_minus),x_size,1,kf->x_hat_minus_data);
+    Matrix_Init(&(kf->I_x_x),x_size,x_size,kf->I_data);
     //初始化暂时矩阵
     Matrix_Init((&kf->temp_mat_for_xhatminus_Updata),x_size,1,kf->temp_mat_for_xhatminus_Updata_data);
     Matrix_Init((&kf->temp_mat_for_xhatminus_Updata2),x_size,1,kf->temp_mat_for_xhatminus_Updata_data2);
+    Matrix_Init((&kf->temp_mat_for_Pminus_Updata),x_size,x_size,kf->temp_mat_for_Pminus_Updata_data);
+    Matrix_Init((&kf->temp_mat_for_Pminus_Updata2),x_size,x_size,kf->temp_mat_for_Pminus_Updata_data2);
+    Matrix_Init(&(kf->temp_z_x_mat),z_size,x_size,kf->temp_z_x_mat_data);
+    Matrix_Init(&(kf->temp_x_z_mat),x_size,z_size,kf->temp_x_z_mat_data);
+    Matrix_Init(&(kf->temp_z_z_mat),z_size,z_size,kf->temp_z_z_mat_data);
+    Matrix_Init(&(kf->temp_z_z_mat2),z_size,z_size,kf->temp_z_z_mat2_data);
+    Matrix_Init(&(kf->temp_z_z_mat3),z_size,z_size,kf->temp_z_z_mat3_data);
+    Matrix_Init(&(kf->temp_z_1_mat),z_size,1,kf->temp_z_1_mat_data);
+    Matrix_Init(&(kf->temp_z_1_mat2),z_size,1,kf->temp_z_1_mat2_data);
+    Matrix_Init(&kf->temp_x_x_mat,x_size,x_size,kf->temp_x_x_mat_data);
+    Matrix_Init(&kf->temp_x_x_mat2,x_size,x_size,kf->temp_x_x_mat2_data);
 }
 /**
  * @brief 更新卡尔曼滤波器中的x先验估计
@@ -69,6 +93,7 @@ void KalmanFilter_xhatminus_Updata(KalmanFilter* kf)
 void KalmanFilter_Pminus_Updata(KalmanFilter* kf)
 {
     Matrix_Multiply(&(kf->A),&(kf->P),&(kf->temp_mat_for_Pminus_Updata));
+    Matrix_Transpose(&(kf->A),&(kf->A_T));
     Matrix_Multiply(&(kf->temp_mat_for_Pminus_Updata),&(kf->A_T),&(kf->temp_mat_for_Pminus_Updata2));
     Matrix_Add(&(kf->temp_mat_for_Pminus_Updata2),&(kf->Q),&(kf->P_minus));
 }
@@ -77,5 +102,30 @@ void KalmanFilter_Pminus_Updata(KalmanFilter* kf)
 */
 void KalmanFilter_SetK(KalmanFilter *kf)
 {
-    
+    Matrix_Transpose(&(kf->H),&(kf->H_T));
+    Matrix_Multiply(&(kf->P_minus),&(kf->H_T),&(kf->temp_x_z_mat));
+    Matrix_Multiply(&(kf->H),&(kf->P_minus),&(kf->temp_z_x_mat));
+    Matrix_Multiply(&(kf->temp_z_x_mat),&(kf->H_T),&(kf->temp_z_z_mat));
+    Matrix_Add(&(kf->temp_z_z_mat),&(kf->R),&(kf->temp_z_z_mat2));
+    Matrix_Inverse(&(kf->temp_z_z_mat2),&(kf->temp_z_z_mat3));
+    Matrix_Multiply(&(kf->temp_x_z_mat),&(kf->temp_z_z_mat3),&(kf->K));
+}
+/**
+ * @brief 后验，得到最终估计值
+*/
+void KalmanFilter_xhat_Update(KalmanFilter *kf)
+{
+    Matrix_Multiply(&(kf->H),&(kf->x_hat_minus),&(kf->temp_z_1_mat));
+    Matrix_Subtract(&(kf->z),&(kf->temp_z_1_mat),&(kf->temp_z_1_mat2));
+    Matrix_Multiply(&(kf->K),&(kf->temp_z_1_mat2),&(kf->temp_x_1_mat));
+    Matrix_Add(&(kf->temp_x_1_mat),&(kf->x_hat_minus),&(kf->x_hat));
+}
+/**
+ * @brief 更新误差协方差矩阵
+*/
+void KalmanFilter_P_Update(KalmanFilter *kf)
+{
+    Matrix_Multiply(&(kf->K),&(kf->H),&(kf->temp_x_x_mat));
+    Matrix_Subtract(&(kf->I_x_x),&(kf->temp_x_x_mat),&(kf->temp_x_x_mat2));
+    Matrix_Multiply(&(kf->temp_x_x_mat2),&(kf->P_minus),&(kf->P));
 }
