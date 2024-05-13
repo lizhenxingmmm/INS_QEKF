@@ -578,6 +578,16 @@
               <FileType>1</FileType>
               <FilePath>..\user\KalmanFilter.c</FilePath>
             </File>
+            <File>
+              <FileName>QEKF_IMU.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\QEKF_IMU.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dwt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\bsp_dwt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -49,8 +49,8 @@ typedef struct kf_struct
     mat P_minus;//先验误差协方差矩阵
     mat I_x_x;//xsize x xsize 阶单位矩阵
     //暂时矩阵
-    mat temp_mat_for_xhatminus_Updata,temp_mat_for_xhatminus_Updata2;
-    mat temp_mat_for_Pminus_Updata,temp_mat_for_Pminus_Updata2;
+    mat temp_mat_for_xhatminus_Update,temp_mat_for_xhatminus_Update2;
+    mat temp_mat_for_Pminus_Update,temp_mat_for_Pminus_Update2;
     mat temp_x_z_mat,temp_z_x_mat,temp_z_z_mat,temp_z_z_mat2,temp_z_z_mat3;
     mat temp_z_1_mat,temp_z_1_mat2,temp_x_1_mat;
     mat temp_x_x_mat,temp_x_x_mat2;
@@ -67,8 +67,8 @@ typedef struct kf_struct
     float *K_data;
     float *I_data;
     //暂时矩阵的数据空间
-    float *temp_mat_for_xhatminus_Updata_data,*temp_mat_for_xhatminus_Updata_data2;
-    float *temp_mat_for_Pminus_Updata_data,*temp_mat_for_Pminus_Updata_data2;
+    float *temp_mat_for_xhatminus_Update_data,*temp_mat_for_xhatminus_Update_data2;
+    float *temp_mat_for_Pminus_Update_data,*temp_mat_for_Pminus_Update_data2;
     float *temp_x_z_mat_data,*temp_z_x_mat_data,*temp_z_z_mat_data,*temp_z_z_mat2_data,*temp_z_z_mat3_data;
     float *temp_z_1_mat_data,*temp_z_1_mat2_data,*temp_x_1_mat_data;
     float *temp_x_x_mat_data,*temp_x_x_mat2_data;
@@ -76,19 +76,23 @@ typedef struct kf_struct
     uint8_t x_size;
     uint8_t u_size;
     uint8_t z_size;
-    //数据输入函数，一定要定义！！
-    void (*DataInput)(struct kf_struct* kf);//用于将传感器数据给到卡尔曼滤波器
     //user function 用于扩展卡尔曼滤波
-    void (*user_function_1)(struct kf_struct* kf);
-    void (*user_function_2)(struct kf_struct* kf);
-    void (*user_function_3)(struct kf_struct* kf);
-    void (*user_function_4)(struct kf_struct* kf);
-    void (*user_function_5)(struct kf_struct* kf);
+    void (*User_func_before_xhatminusUpdate)(struct kf_struct* kf);
+    void (*User_func_before_PminusUpdate)(struct kf_struct* kf);
+    void (*User_func_before_SetK)(struct kf_struct* kf);
+    void (*User_func_before_xhat_Update)(struct kf_struct* kf);
+    void (*User_func_before_P_Update)(struct kf_struct* kf);
+    //跳步标志位
+    uint8_t xhatminusUpdate_skip;
+    uint8_t PminusUpdate_skip;
+    uint8_t SetK_skip;
+    uint8_t xhat_Update_skip;
+    uint8_t P_Update_skip;
 }KalmanFilter;
 
 void KalmanFilter_Init(KalmanFilter* kf,uint8_t x_size,uint8_t u_size,uint8_t z_size);
-void KalmanFilter_xhatminus_Updata(KalmanFilter* kf);
-void KalmanFilter_Pminus_Updata(KalmanFilter* kf);
+void KalmanFilter_xhatminus_Update(KalmanFilter* kf);
+void KalmanFilter_Pminus_Update(KalmanFilter* kf);
 void KalmanFilter_SetK(KalmanFilter *kf);
 void KalmanFilter_xhat_Update(KalmanFilter *kf);
 void KalmanFilter_P_Update(KalmanFilter *kf);
