@@ -11,7 +11,7 @@
 
 #include "arm_math.h"
 #include <stdlib.h>
-
+#include <string.h>
 #define mat arm_matrix_instance_f32
 #define Matrix_Init arm_mat_init_f32
 #define Matrix_Add arm_mat_add_f32
@@ -28,12 +28,14 @@
 #endif
 #endif
 
+#define sizeof_float            4
+
 typedef struct kf_struct
 {
     //外部传感器数据接口
-    float *InputVector_u;
-    float *Filtered_StateVector_x;
-    float *MeasuredVector_z;
+    float InputVector_u[6];
+    float Filtered_StateVector_x[6];
+    float MeasuredVector_z[6];
     //矩阵
     mat x_hat;
     mat x_hat_minus;
@@ -55,23 +57,40 @@ typedef struct kf_struct
     mat temp_z_1_mat,temp_z_1_mat2,temp_x_1_mat;
     mat temp_x_x_mat,temp_x_x_mat2;
     //矩阵数据存储空间指针
-    float *x_hat_data, *x_hat_minus_data;
-    float *u_data;
-    float *z_data;
-    float *P_data, *P_minus_data;
-    float *A_data, *AT_data;
-    float *B_data;
-    float *H_data, *HT_data;
-    float *Q_data;
-    float *R_data;
-    float *K_data;
-    float *I_data;
+    // float *x_hat_data, *x_hat_minus_data;
+    // float *u_data;
+    // float *z_data;
+    // float *P_data, *P_minus_data;
+    // float *A_data, *AT_data;
+    // float *B_data;
+    // float *H_data, *HT_data;
+    // float *Q_data;
+    // float *R_data;
+    // float *K_data;
+    // float *I_data;
+    //静态分配空间，上限6
+    float x_hat_data[6], x_hat_minus_data[6];
+    float u_data[6];
+    float z_data[6];
+    float P_data[36], P_minus_data[36];
+    float A_data[36], AT_data[36];
+    float B_data[36];
+    float H_data[36], HT_data[36];
+    float Q_data[36];
+    float R_data[36];
+    float K_data[36];
+    float I_data[36];
     //暂时矩阵的数据空间
-    float *temp_mat_for_xhatminus_Update_data,*temp_mat_for_xhatminus_Update_data2;
-    float *temp_mat_for_Pminus_Update_data,*temp_mat_for_Pminus_Update_data2;
-    float *temp_x_z_mat_data,*temp_z_x_mat_data,*temp_z_z_mat_data,*temp_z_z_mat2_data,*temp_z_z_mat3_data;
-    float *temp_z_1_mat_data,*temp_z_1_mat2_data,*temp_x_1_mat_data;
-    float *temp_x_x_mat_data,*temp_x_x_mat2_data;
+    // float *temp_mat_for_xhatminus_Update_data,*temp_mat_for_xhatminus_Update_data2;
+    // float *temp_mat_for_Pminus_Update_data,*temp_mat_for_Pminus_Update_data2;
+    // float *temp_x_z_mat_data,*temp_z_x_mat_data,*temp_z_z_mat_data,*temp_z_z_mat2_data,*temp_z_z_mat3_data;
+    // float *temp_z_1_mat_data,*temp_z_1_mat2_data,*temp_x_1_mat_data;
+    // float *temp_x_x_mat_data,*temp_x_x_mat2_data;
+    float temp_mat_for_xhatminus_Update_data[6],temp_mat_for_xhatminus_Update_data2[6];
+    float temp_mat_for_Pminus_Update_data[36],temp_mat_for_Pminus_Update_data2[36];
+    float temp_x_z_mat_data[36],temp_z_x_mat_data[36],temp_z_z_mat_data[36],temp_z_z_mat2_data[36],temp_z_z_mat3_data[36];
+    float temp_z_1_mat_data[6],temp_z_1_mat2_data[6],temp_x_1_mat_data[6];
+    float temp_x_x_mat_data[36],temp_x_x_mat2_data[36];
     //状态空间方程中变量的维度
     uint8_t x_size;
     uint8_t u_size;

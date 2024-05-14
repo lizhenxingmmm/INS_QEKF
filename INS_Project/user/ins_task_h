@@ -1,0 +1,17 @@
+#ifndef INS_TASK_H
+#define INS_TASK_H
+
+typedef struct INS
+{
+    float accel[3];
+    float gyro[3];
+    float Yaw;
+    float Pitch;
+    float Roll;
+    float Yaw_total;
+    /* data */
+}INS_T;
+
+
+
+#endif

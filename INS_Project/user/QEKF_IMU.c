@@ -11,7 +11,7 @@
 float Chi_square_result=0;
 uint32_t Chi_square_skip_count=0;
 
-static float x_init[6]={1,0,0,0,0,0};//初始化姿态
+static float x_init[6]={1,0,0,0,-0.9155f*2*PI/360,0.529f*2*PI/360};//初始化姿态
 static float A_mat_data_init[36]={1,0,0,0,0,0,
                                   0,1,0,0,0,0,
                                   0,0,1,0,0,0,
@@ -33,27 +33,19 @@ static float P_mat_data_init[36]={10000,0.1,0.1,0.1,0.1,0.1,
 */
 void QEKF_IMU_Init(QEKF_IMU_t* qekf,float process_noisy1,float process_noisy2,float measure_noisy)
 {
-    memset(qekf->mat_q_data,0,sizeof(qekf->mat_q_data));
+    memset(qekf->mat_q_data,0,16*sizeof_float);
     //卡尔曼滤波器初始化
     KalmanFilter_Init(&(qekf->IMU_QEKF_kf),6,0,3);
     //连接函数
     qekf->IMU_QEKF_kf.User_func_before_SetK=Chi_square_Check;//算卡尔曼增益前的卡方检测
-    qekf->IMU_QEKF_kf.User_func_before_xhat_Update=eliminate_q3;//取消重力加速度对偏航角的修正
+    qekf->IMU_QEKF_kf.User_func_before_P_Update=eliminate_q3;//取消重力加速度对偏航角的修正
     //init kalman filter matrix
-    memcpy(qekf->IMU_QEKF_kf.A_data,A_mat_data_init,36);//初始化状态传递矩阵
-    memcpy(qekf->IMU_QEKF_kf.P_data,P_mat_data_init,36);//初始化误差协方差
-    memcpy(qekf->IMU_QEKF_kf.x_hat_data,x_init,6);//初始化姿态和xy轴零漂
-    //初始化计算噪声矩阵
-    qekf->IMU_QEKF_kf.Q_data[0]=process_noisy1;
-    qekf->IMU_QEKF_kf.Q_data[7]=process_noisy1;
-    qekf->IMU_QEKF_kf.Q_data[14]=process_noisy1;
-    qekf->IMU_QEKF_kf.Q_data[21]=process_noisy1;
-    qekf->IMU_QEKF_kf.Q_data[28]=process_noisy2;
-    qekf->IMU_QEKF_kf.Q_data[35]=process_noisy2;
-    //初始化测量矩阵
-    qekf->IMU_QEKF_kf.R_data[0]=measure_noisy;
-    qekf->IMU_QEKF_kf.R_data[4]=measure_noisy;
-    qekf->IMU_QEKF_kf.R_data[8]=measure_noisy;
+    memcpy(qekf->IMU_QEKF_kf.A_data,A_mat_data_init,36*sizeof_float);//初始化状态传递矩阵
+    memcpy(qekf->IMU_QEKF_kf.P_data,P_mat_data_init,36*sizeof_float);//初始化误差协方差
+    memcpy(qekf->IMU_QEKF_kf.x_hat_data,x_init,6*sizeof_float);//初始化姿态和xy轴零漂
+    qekf->Q1=process_noisy1;
+    qekf->Q2=process_noisy2;
+    qekf->R=measure_noisy;
 }
 /**
  * @brief imu kalman filter updata 卡尔曼迭代
@@ -74,19 +66,50 @@ void QEKF_IMU_Update(QEKF_IMU_t* qekf,float gyro[3],float accel[3],float dt)
     {
         QEKF_IMU_Init(qekf,10,1,100000);//噪声参数应该还要调
     }
+    memcpy(qekf->accel,accel,3*sizeof_float);
+    memcpy(qekf->gyro,gyro,3*sizeof_float);
     //得到两次程序的时间差
     qekf->dt=dt;
     //将加速度输入卡尔曼滤波器的观测值中
-    memcpy(qekf->IMU_QEKF_kf.MeasuredVector_z,accel,qekf->IMU_QEKF_kf.z_size);
+    memcpy(qekf->IMU_QEKF_kf.MeasuredVector_z,accel,qekf->IMU_QEKF_kf.z_size*sizeof_float);
     //迭代状态转移矩阵A
    QEKF_IMU_A_Update(qekf,gyro);
    //迭代观测矩阵H
    QEKF_IMU_H_Update(qekf);
+   //计算噪声矩阵
+    qekf->IMU_QEKF_kf.Q_data[0]=(qekf->Q1)*dt;
+    qekf->IMU_QEKF_kf.Q_data[7]=(qekf->Q1)*dt;
+    qekf->IMU_QEKF_kf.Q_data[14]=(qekf->Q1)*dt;
+    qekf->IMU_QEKF_kf.Q_data[21]=(qekf->Q1)*dt;
+    qekf->IMU_QEKF_kf.Q_data[28]=(qekf->Q2)*dt;
+    qekf->IMU_QEKF_kf.Q_data[35]=(qekf->Q2)*dt;
+    //计算测量矩阵
+    qekf->IMU_QEKF_kf.R_data[0]=(qekf->R)*dt;
+    qekf->IMU_QEKF_kf.R_data[4]=(qekf->R)*dt;
+    qekf->IMU_QEKF_kf.R_data[8]=(qekf->R)*dt;
+    qekf->initialized_flag=1;
    //kalman filter update
    KalmanFilter_Update(&(qekf->IMU_QEKF_kf));
    //取数据
-   memcpy(qekf->q,qekf->IMU_QEKF_kf.Filtered_StateVector_x,4);
-   memcpy(qekf->w_bias,&(qekf->IMU_QEKF_kf.Filtered_StateVector_x[4]),2);
+   memcpy(qekf->q,qekf->IMU_QEKF_kf.Filtered_StateVector_x,4*sizeof_float);
+   memcpy(qekf->w_bias,&(qekf->IMU_QEKF_kf.Filtered_StateVector_x[4]),2*sizeof_float);
+   // 利用四元数反解欧拉角
+    qekf->Yaw = atan2f(2.0f * (qekf->q[0] * qekf->q[3] + qekf->q[1] * qekf->q[2]), 2.0f * (qekf->q[0] * qekf->q[0] + qekf->q[1] * qekf->q[1]) - 1.0f) * 57.295779513f;
+    qekf->Pitch = atan2f(2.0f * (qekf->q[0] * qekf->q[1] + qekf->q[2] * qekf->q[3]), 2.0f * (qekf->q[0] * qekf->q[0] + qekf->q[3] * qekf->q[3]) - 1.0f) * 57.295779513f;
+    qekf->Roll = asinf(-2.0f * (qekf->q[1] * qekf->q[3] - qekf->q[0] * qekf->q[2])) * 57.295779513f;
+
+    // get Yaw total, yaw数据可能会超过360,处理一下方便其他功能使用(如小陀螺)
+    if (qekf->Yaw - qekf->YawAngleLast > 180.0f)
+    {
+        qekf->YawRoundCount--;
+    }
+    else if (qekf->Yaw - qekf->YawAngleLast < -180.0f)
+    {
+        qekf->YawRoundCount++;
+    }
+    qekf->YawTotalAngle = 360.0f * qekf->YawRoundCount + qekf->Yaw;
+    qekf->YawAngleLast = qekf->Yaw;
+    qekf->UpdateCount++; // 初始化低通滤波用,计数测试用
 }
 /**
  * @brief 迭代状态转移矩阵A
@@ -125,6 +148,12 @@ void QEKF_IMU_A_Update(QEKF_IMU_t* qekf,float gyro[3])
         -q0*dt*0.5   q3*dt*0.5 
         -q3*dt*0.5  -q0*dt*0.5
          q2*dt*0.5  -q1*dt*0.5}*/
+    //单位化四元数
+    float scale=1/sqrt((qekf->q[0])*(qekf->q[0])+(qekf->q[1])*(qekf->q[1])+(qekf->q[2])*(qekf->q[2])+(qekf->q[3])*(qekf->q[3]));
+    qekf->q[0]*=scale;
+    qekf->q[1]*=scale;
+    qekf->q[2]*=scale;
+    qekf->q[3]*=scale;//有必要？
     qekf->mat_Ok_data[0]=qekf->q[1]*(qekf->dt)*0.5f;
     qekf->mat_Ok_data[1]=qekf->q[2]*(qekf->dt)*0.5f;
     qekf->mat_Ok_data[2]=-qekf->q[0]*(qekf->dt)*0.5f;
@@ -159,8 +188,8 @@ void QEKF_IMU_A_Update(QEKF_IMU_t* qekf,float gyro[3])
     qekf->IMU_QEKF_kf.A_data[22]=qekf->mat_Ok_data[6];
     qekf->IMU_QEKF_kf.A_data[23]=qekf->mat_Ok_data[7];
     //左下角为2x4的0矩阵，右下角为2x2单位矩阵
-    memset(&(qekf->IMU_QEKF_kf.A_data[24]),0,4);
-    memset(&(qekf->IMU_QEKF_kf.A_data[30]),0,4);
+    memset(&(qekf->IMU_QEKF_kf.A_data[24]),0,4*sizeof_float);
+    memset(&(qekf->IMU_QEKF_kf.A_data[30]),0,4*sizeof_float);
     qekf->IMU_QEKF_kf.A_data[28]=1;
     qekf->IMU_QEKF_kf.A_data[29]=0;
     qekf->IMU_QEKF_kf.A_data[35]=1;
@@ -234,5 +263,8 @@ void Chi_square_Check(KalmanFilter* kf)
 */
 void eliminate_q3(KalmanFilter* kf)
 {
-    kf->K_data[21]=0;
+    kf->I_data[21]=0;
+    Matrix_Multiply(&(kf->I_x_x),&(kf->K),&(kf->temp_x_x_mat));
+    memcpy(kf->K_data,kf->temp_x_x_mat_data,36*sizeof_float);
+    kf->I_data[21]=1;
 }

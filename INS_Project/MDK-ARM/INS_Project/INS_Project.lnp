@@ -35,6 +35,9 @@
 "ins_project\kalmanfilter.o"
 "ins_project\qekf_imu.o"
 "ins_project\bsp_dwt.o"
+"ins_project\mpu6050.o"
+"ins_project\software_i2c.o"
+"ins_project\ins_task.o"
 "../Middlewares/ST/ARM/DSP/Lib/arm_cortexM4l_math.lib"
 --library_type=microlib --strict --scatter "INS_Project\INS_Project.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

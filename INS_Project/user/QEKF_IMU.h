@@ -25,8 +25,22 @@ typedef struct QEKF_IMU
     float mat_q_data[16];//状态转移矩阵A左上角的4x4矩阵
     float mat_Ok_data[8];//状态转移矩阵A右上角的4x2矩阵
     uint8_t convergency_flag;
+    float Yaw;
+    float Pitch;
+    float Roll;
+    float YawRoundCount;
+    float YawTotalAngle;
+    float YawAngleLast;
+    uint32_t UpdateCount;
+    float Q1;
+    float Q2;
+    float R;
+    float gyro[3];
+    float accel[3];
 }QEKF_IMU_t;
 
+void QEKF_IMU_Init(QEKF_IMU_t* qekf,float process_noisy1,float process_noisy2,float measure_noisy);
+void QEKF_IMU_Update(QEKF_IMU_t* qekf,float gyro[3],float accel[3],float dt);
 void QEKF_IMU_A_Update(QEKF_IMU_t* qekf,float gyro[3]);
 void QEKF_IMU_H_Update(QEKF_IMU_t* qekf);
 void Chi_square_Check(KalmanFilter* kf);
