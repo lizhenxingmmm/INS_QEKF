@@ -46,6 +46,7 @@ void QEKF_IMU_Init(QEKF_IMU_t* qekf,float process_noisy1,float process_noisy2,fl
     qekf->Q1=process_noisy1;
     qekf->Q2=process_noisy2;
     qekf->R=measure_noisy;
+    qekf->initialized_flag=1;
 }
 /**
  * @brief imu kalman filter updata 卡尔曼迭代
@@ -56,6 +57,7 @@ void QEKF_IMU_Init(QEKF_IMU_t* qekf,float process_noisy1,float process_noisy2,fl
  *          观测矩阵为H[-q2,q3,-q0,q1,0,0
  *                      q1,q0,q3,q2,0,0
  *                      q0,-q1,-q2,q3,0,0]*2
+ * @param 输入的角速度rad/s ，重力加速度要做单位化处理
 */
 void QEKF_IMU_Update(QEKF_IMU_t* qekf,float gyro[3],float accel[3],float dt)
 {
@@ -64,7 +66,7 @@ void QEKF_IMU_Update(QEKF_IMU_t* qekf,float gyro[3],float accel[3],float dt)
     //防止程序未初始化
     if(!qekf->initialized_flag)
     {
-        QEKF_IMU_Init(qekf,10,1,100000);//噪声参数应该还要调
+        QEKF_IMU_Init(qekf,10,1,0);//噪声参数应该还要调
     }
     memcpy(qekf->accel,accel,3*sizeof_float);
     memcpy(qekf->gyro,gyro,3*sizeof_float);
@@ -87,7 +89,6 @@ void QEKF_IMU_Update(QEKF_IMU_t* qekf,float gyro[3],float accel[3],float dt)
     qekf->IMU_QEKF_kf.R_data[0]=(qekf->R)*dt;
     qekf->IMU_QEKF_kf.R_data[4]=(qekf->R)*dt;
     qekf->IMU_QEKF_kf.R_data[8]=(qekf->R)*dt;
-    qekf->initialized_flag=1;
    //kalman filter update
    KalmanFilter_Update(&(qekf->IMU_QEKF_kf));
    //取数据

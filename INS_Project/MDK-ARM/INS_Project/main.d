@@ -30,6 +30,7 @@ ins_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 ins_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 ins_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 ins_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+ins_project\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 ins_project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 ins_project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 ins_project\main.o: ../Core/Inc/FreeRTOSConfig.h
@@ -44,6 +45,7 @@ ins_project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 ins_project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 ins_project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 ins_project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+ins_project\main.o: ../Core/Inc/usart.h
 ins_project\main.o: ../Core/Inc/gpio.h
 ins_project\main.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
 ins_project\main.o: ../Drivers/CMSIS/DSP/Include/arm_math_types.h

@@ -31,6 +31,7 @@ ins_project\bsp_dwt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 ins_project\bsp_dwt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 ins_project\bsp_dwt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 ins_project\bsp_dwt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+ins_project\bsp_dwt.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 ins_project\bsp_dwt.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 ins_project\bsp_dwt.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 ins_project\bsp_dwt.o: ../Core/Inc/FreeRTOSConfig.h

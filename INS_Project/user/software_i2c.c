@@ -4,8 +4,8 @@
 
 #define  I2C_GPIO_RCC      RCC_APB2Periph_GPIOB
 #define  I2C_GPIO          GPIOB
-#define  I2C_SCL           GPIO_PIN_3
-#define  I2C_SDA           GPIO_PIN_4
+#define  I2C_SCL           GPIO_PIN_7
+#define  I2C_SDA           GPIO_PIN_6
 
 /**
  * 函数功能：I2C时钟线写

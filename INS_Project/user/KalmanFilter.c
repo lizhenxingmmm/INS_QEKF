@@ -111,6 +111,7 @@ void KalmanFilter_Pminus_Update(KalmanFilter* kf)
 /**
  * @brief 计算卡尔曼增益
 */
+float debug_inv;
 void KalmanFilter_SetK(KalmanFilter *kf)
 {
     Matrix_Transpose(&(kf->H),&(kf->H_T));
@@ -118,7 +119,7 @@ void KalmanFilter_SetK(KalmanFilter *kf)
     Matrix_Multiply(&(kf->H),&(kf->P_minus),&(kf->temp_z_x_mat));
     Matrix_Multiply(&(kf->temp_z_x_mat),&(kf->H_T),&(kf->temp_z_z_mat));
     Matrix_Add(&(kf->temp_z_z_mat),&(kf->R),&(kf->temp_z_z_mat2));
-    Matrix_Inverse(&(kf->temp_z_z_mat2),&(kf->temp_z_z_mat3));
+    Matrix_Inverse(&(kf->temp_z_z_mat2),&(kf->temp_z_z_mat3));//矩阵求逆有问题
     Matrix_Multiply(&(kf->temp_x_z_mat),&(kf->temp_z_z_mat3),&(kf->K));
 }
 /**
